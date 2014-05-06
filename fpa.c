@@ -99,7 +99,7 @@ fpaoperation(u32int instr)
 	case 18: res = fabs(op2); break;
 	case 19: res = (vlong) op2; break;
 	case 20: res = sqrt(op2); break;
-	default: sysfatal("unimplemented FPA operation %#x @ %8ux", opc, P->PC - 4);
+	default: sysfatal("unimplemented FPA operation %#x @ %16lux", opc, P->PC - 4);
 	return;
 	}
 	switch(prec) {
