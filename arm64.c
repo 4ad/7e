@@ -446,24 +446,6 @@ step(void)
 			);
 	}
 	P->PC += 4;
-	switch(instr >> 28) {
-	case 0x0: if(!(P->CPSR & flZ)) return; break;
-	case 0x1: if(P->CPSR & flZ) return; break;
-	case 0x2: if(!(P->CPSR & flC)) return; break;
-	case 0x3: if(P->CPSR & flC) return; break;
-	case 0x4: if(!(P->CPSR & flN)) return; break;
-	case 0x5: if(P->CPSR & flN) return; break;
-	case 0x6: if(!(P->CPSR & flV)) return; break;
-	case 0x7: if(P->CPSR & flV) return; break;
-	case 0x8: if(!(P->CPSR & flC) || (P->CPSR & flZ)) return; break;
-	case 0x9: if((P->CPSR & flC) && !(P->CPSR & flZ)) return; break;
-	case 0xA: if(!(P->CPSR & flN) != !(P->CPSR & flV)) return; break;
-	case 0xB: if(!(P->CPSR & flN) == !(P->CPSR & flV)) return; break;
-	case 0xC: if((P->CPSR & flZ) || !(P->CPSR & flN) != !(P->CPSR & flV)) return; break;
-	case 0xD: if(!(P->CPSR & flZ) && !(P->CPSR & flN) == !(P->CPSR & flV)) return; break;
-	case 0xE: break;
-	default: sysfatal("condition code %x not implemented", instr >> 28);
-	}
 	if((instr & 0x0FB00FF0) == 0x01000090)
 		swap(instr);
 	else if((instr & 0x0FE000F0) == 0x01800090)
