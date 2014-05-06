@@ -9,12 +9,6 @@ enum {
 	NNOTE = 5,
 	SEGNUM = 8,
 	Nfpregs = 32,
-
-	flN = 1<<31,
-	flZ = 1<<30,
-	flC = 1<<29,
-	flV = 1<<28,
-	FLAGS = flN | flZ | flC | flV,
 };
 
 enum {
@@ -32,7 +26,7 @@ struct Process {
 
 	Segment *S[SEGNUM];	/* memory */
 	u64int R[31];		/* general purpose registers, R31 is stack/zero */
-	u32int CPSR;		/* status register */
+	u64int N, Z, C, V;	/* flags */
 	
 	u32int FPSR;
 	long double F[Nfpregs];

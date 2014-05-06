@@ -1,2 +1,5 @@
-Remove CPSR.
 FP regs are 128-bit.
+
+# Done
+More, wider registers.
+Remove CPSR.
