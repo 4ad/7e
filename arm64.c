@@ -438,11 +438,11 @@ step(void)
 			if(fileline(buf, 512, P->PC) >= 0)
 				print("%s ", buf);
 		}
-		print("%.8ux %.8ux %c%c%c%c\n", P->PC, instr,
-			(P->CPSR & flZ) ? 'Z' : ' ',
-			(P->CPSR & flC) ? 'C' : ' ',
-			(P->CPSR & flN) ? 'N' : ' ',
-			(P->CPSR & flV) ? 'V' : ' '
+		print("%.16ux %.8ux %c%c%c%c\n", P->PC, instr,
+			(P->Z) ? 'Z' : ' ',
+			(P->C) ? 'C' : ' ',
+			(P->N) ? 'N' : ' ',
+			(P->V) ? 'V' : ' '
 			);
 	}
 	P->PC += 4;
