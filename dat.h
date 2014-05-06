@@ -31,7 +31,7 @@ struct Process {
 	Ref *path;		/* Ref + string data */
 
 	Segment *S[SEGNUM];	/* memory */
-	u32int R[16];		/* general purpose registers / PC (R15) */
+	u32int R[31];		/* general purpose registers */
 	u32int CPSR;		/* status register */
 	
 	u32int FPSR;
