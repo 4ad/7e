@@ -61,7 +61,7 @@ struct Segment {
 	int flags;
 	RWLock rw; /* lock for SEGFLLOCK segments */
 	Lock lock; /* atomic accesses */
-	u32int start, size;
+	u64int start, size;
 	void *data;
 	Ref *dref;
 };
