@@ -432,6 +432,6 @@ void
 initfs(char *name, char *mtpt)
 {
 	luser = getuser();
-	remove("/srv/armproc");
+	remove("/srv/arm64proc");
 	postmountsrv(&procsrv, name, mtpt, MREPL);
 }

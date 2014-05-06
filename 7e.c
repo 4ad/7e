@@ -22,12 +22,12 @@ dump(void)
 static void
 adjustns(void)
 {
-	if(bind("/arm/bin", "/bin", MREPL) < 0)
+	if(bind("/arm64/bin", "/bin", MREPL) < 0)
 		sysfatal("bind: %r");
 	if(bind("/rc/bin", "/bin", MAFTER) < 0)
 		sysfatal("bind: %r");
-	putenv("cputype", "arm");
-	putenv("objtype", "arm");
+	putenv("cputype", "arm64");
+	putenv("objtype", "arm64");
 }
 
 void
@@ -116,7 +116,7 @@ main(int argc, char **argv)
 	if(!nflag)
 		adjustns();
 	if(pflag)
-		initfs("armproc", "/proc");
+		initfs("arm64proc", "/proc");
 	initproc();
 	dotext(argc, argv);
 	atnotify(notehandler, 1);
