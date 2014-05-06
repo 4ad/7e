@@ -8,7 +8,7 @@ enum {
 	NAMEMAX = 27,
 	NNOTE = 5,
 	SEGNUM = 8,
-	Nfpregs = 16,
+	Nfpregs = 32,
 
 	flN = 1<<31,
 	flZ = 1<<30,
