@@ -1,5 +1,9 @@
 FP regs are 128-bit.
 
+# 5e
+single = load/store
+block = STM
+
 # Done
 More, wider registers.
 Remove CPSR.

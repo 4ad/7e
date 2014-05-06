@@ -446,7 +446,14 @@ step(void)
 			);
 	}
 	P->PC += 4;
-	if((instr & 0x0FB00FF0) == 0x01000090)
+	if(((instr >> 27) & 3) == 0)
+		invalid()
+	else if ((instr & (0x354 << 22)) == (0x354 << 22))
+		syscall();
+	else if ((instr & (5 << 26)) == (5 << 26))
+		branch(instr);
+
+	else if((instr & 0x0FB00FF0) == 0x01000090)
 		swap(instr);
 	else if((instr & 0x0FE000F0) == 0x01800090)
 		singleex(instr);
