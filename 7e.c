@@ -12,9 +12,9 @@ dump(void)
 {
 	int i;
 	
-	for(i = 0; i < 16; i++) {
-		print("R%2d %.8ux", i, P->R[i]);
-		if((i % 4) == 3) print("\n");
+	for(i = 0; i < 31; i++) {
+		print("R%2d %.16ux", i, P->R[i]);
+		if((i % 2) == 1) print("\n");
 		else print("\t");
 	}
 }
