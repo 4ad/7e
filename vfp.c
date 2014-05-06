@@ -38,7 +38,7 @@ vfpregtransfer(u32int instr)
 			*Rt = P->FPSR;
 		break;
 	default:
-		sysfatal("unimplemented VFP instruction %8ux @ %8ux", instr, P->R[15] - 4);
+		sysfatal("unimplemented VFP instruction %8ux @ %8ux", instr, P->PC - 4);
 	}
 }
 
@@ -70,7 +70,7 @@ vfprmtransfer(u32int instr)
 			P->F[d] = *(float*)ea;
 		break;
 	default:
-		sysfatal("unimplemented VFP instruction %8ux @ %8ux", instr, P->R[15] - 4);
+		sysfatal("unimplemented VFP instruction %8ux @ %8ux", instr, P->PC - 4);
 	}
 	segunlock(seg);
 }
@@ -95,7 +95,7 @@ vfparithop(int opc, u32int instr)
 	case 8:
 		*Fd = *Fn / *Fm; break;
 	default:
-		sysfatal("unimplemented VFP instruction %8ux @ %8ux", instr, P->R[15] - 4);
+		sysfatal("unimplemented VFP instruction %8ux @ %8ux", instr, P->PC - 4);
 	}
 }
 
@@ -111,7 +111,7 @@ vfpotherop(u32int instr)
 	o3 = (instr>>6) & 0x3;
 
 	if((o3&1) == 0)
-		sysfatal("unimplemented VFP instruction %8ux @ %8ux", instr, P->R[15] - 4);
+		sysfatal("unimplemented VFP instruction %8ux @ %8ux", instr, P->PC - 4);
 	switch(o2){
 	case 0x5:
 		Fm = &F0;
@@ -141,7 +141,7 @@ vfpotherop(u32int instr)
 		case 3:
 			*Fd = sqrt(*Fm); break;
 		default:
-			sysfatal("unimplemented VFP instruction %8ux @ %8ux", instr, P->R[15] - 4);
+			sysfatal("unimplemented VFP instruction %8ux @ %8ux", instr, P->PC - 4);
 		}
 	}
 }

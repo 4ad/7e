@@ -57,7 +57,7 @@ vaddr(u32int addr, u32int len, Segment **seg)
 			return (char *)s->data + (addr - s->start);
 		}
 	}
-	suicide("fault %.8ux (%d) @ %.8ux", addr, len, P->R[15]);
+	suicide("fault %.8ux (%d) @ %.8ux", addr, len, P->PC);
 	return nil;
 }
 

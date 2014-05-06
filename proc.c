@@ -228,7 +228,7 @@ loadtext(char *file, int argc, char **argv)
 	if(readn(fd, data->data, fp.datsz) < fp.datsz)
 		sysfatal("%r");
 	memset(bss->data, 0, bss->size);
-	P->R[15] = fp.entry;
+	P->PC = fp.entry;
 	if(havesymbols && syminit(fd, &fp) < 0)
 		fprint(2, "initializing symbol table: %r\n");
 	close(fd);
@@ -383,7 +383,7 @@ donote(char *msg, ulong type)
 	memcpy(ureg, P->R, 15 * 4);
 	ureg[15] = type;
 	ureg[16] = P->CPSR;
-	ureg[17] = P->R[15];
+	ureg[17] = P->PC;
 	P->R[13] = uregp;
 	msgp = P->R[13] -= strlen(msg) + 1;
 	msgb = vaddrnol(msgp, strlen(msg) + 1);
@@ -393,7 +393,7 @@ donote(char *msg, ulong type)
 	sp[0] = 0;
 	sp[2] = msgp;
 	P->R[0] = uregp;
-	P->R[15] = P->notehandler;
+	P->PC = P->notehandler;
 	P->innote = 1;
 	switch(rc = setjmp(P->notejmp) - 1) {
 	case -1:
@@ -413,5 +413,5 @@ donote(char *msg, ulong type)
 	ureg = vaddrnol(uregp, 18 * 4); /* just to be sure */
 	memcpy(P->R, ureg, 15 * 4);
 	P->CPSR = ureg[16];
-	P->R[15] = ureg[17];
+	P->PC = ureg[17];
 }

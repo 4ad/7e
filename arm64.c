@@ -22,7 +22,7 @@ enum {
 void
 invalid(u32int instr)
 {
-	suicide("undefined instruction %8ux @ %8ux", instr, P->R[15] - 4);
+	suicide("undefined instruction %8ux @ %16lux", instr, P->PC - 4);
 }
 
 u32int
@@ -30,7 +30,7 @@ evenaddr(u32int addr, u32int mask)
 {
 	if((addr & mask) == 0)
 		return addr;
-	suicide("unaligned access %8ux @ %8ux", addr, P->R[15] - 4);
+	suicide("unaligned access %16lux @ %16lux", addr, P->PC - 4);
 	return addr & ~mask;
 }
 
@@ -84,7 +84,7 @@ single(u32int instr)
 	if(Rn == P->R + 15) {
 		if(instr & fW)
 			invalid(instr);
-		addr = P->R[15] + 4;
+		addr = P->PC + 4;
 	}
 	else
 		addr = *Rn;
@@ -241,8 +241,8 @@ branch(u32int instr)
 		offset |= ~((1 << 24) - 1);
 	offset *= 4;
 	if(instr & fLi)
-		P->R[14] = P->R[15];
-	P->R[15] += offset + 4;
+		P->R[14] = P->PC;
+	P->PC += offset + 4;
 }
 
 static void
@@ -425,7 +425,7 @@ step(void)
 	u32int instr;
 	Segment *seg;
 
-	instr = *(u32int*) vaddr(P->R[15], 4, &seg);
+	instr = *(u32int*) vaddr(P->PC, 4, &seg);
 	segunlock(seg);
 	if(fulltrace) {
 		print("%d ", P->pid);
@@ -433,19 +433,19 @@ step(void)
 			Symbol s;
 			char buf[512];
 			
-			if(findsym(P->R[15], CTEXT, &s) >= 0)
+			if(findsym(P->PC, CTEXT, &s) >= 0)
 				print("%s ", s.name);
-			if(fileline(buf, 512, P->R[15]) >= 0)
+			if(fileline(buf, 512, P->PC) >= 0)
 				print("%s ", buf);
 		}
-		print("%.8ux %.8ux %c%c%c%c\n", P->R[15], instr,
+		print("%.8ux %.8ux %c%c%c%c\n", P->PC, instr,
 			(P->CPSR & flZ) ? 'Z' : ' ',
 			(P->CPSR & flC) ? 'C' : ' ',
 			(P->CPSR & flN) ? 'N' : ' ',
 			(P->CPSR & flV) ? 'V' : ' '
 			);
 	}
-	P->R[15] += 4;
+	P->PC += 4;
 	switch(instr >> 28) {
 	case 0x0: if(!(P->CPSR & flZ)) return; break;
 	case 0x1: if(P->CPSR & flZ) return; break;

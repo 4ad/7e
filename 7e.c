@@ -13,7 +13,7 @@ dump(void)
 	int i;
 	
 	for(i = 0; i < 31; i++) {
-		print("R%2d %.16ux", i, P->R[i]);
+		print("R%2d %.16lux", i, P->R[i]);
 		if((i % 2) == 1) print("\n");
 		else print("\t");
 	}
