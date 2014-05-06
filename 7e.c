@@ -48,7 +48,7 @@ cleanup(void)
 static void
 usage(void)
 {
-	fprint(2, "usage: 5e [-npbf] text [...]\n");
+	fprint(2, "usage: 7e [-npbf] text [...]\n");
 	exits(nil);
 }
 
