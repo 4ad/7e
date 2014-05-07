@@ -448,11 +448,18 @@ step(void)
 	P->PC += 4;
 	if(((instr >> 27) & 3) == 0)
 		invalid()
-	else if ((instr & (0x354 << 22)) == (0x354 << 22))
+	else if(instr & (0x354 << 22))
 		syscall();
-	else if ((instr & (5 << 26)) == (5 << 26))
+	else if(instr & (5 << 26))
 		branch(instr);
+	else if(instr & (4 << 26))
+		alui(instr);
+	else if(instr & (5 << 25))
+		alur(instr);
+	else
+		invalid(instr);
 
+/*
 	else if((instr & 0x0FB00FF0) == 0x01000090)
 		swap(instr);
 	else if((instr & 0x0FE000F0) == 0x01800090)
@@ -487,4 +494,5 @@ step(void)
 		vfprmtransfer(instr);
 	else
 		invalid(instr);
+/*
 }
