@@ -238,25 +238,25 @@ cond(u32int instr)
 
 	switch((instr & 0xF) >> 1) {
 	case 0:
-		r = P->Z == 1;
+		r = P->Z;
 		break;
 	case 1:
-		r = P->C == 1;
+		r = P->C;
 		break;
 	case 2:
-		r = P->N == 1;
+		r = P->N;
 		break;
 	case 3:
-		r = P->V == 1;
+		r = P->V;
 		break;
 	case 4:
-		r = (P->C == 1) && (P->Z == 0);
+		r = P->C && !P->Z;
 		break;
 	case 5:
 		r = P->N == P->V;
 		break;
 	case 6:
-		r = (P->N == P->V) && (P->Z == 0);
+		r = P->N == P->V && !P->Z;
 		break;
 	case 7:
 		r = 1;
