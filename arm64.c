@@ -235,6 +235,14 @@ static void
 branch(u32int instr)
 {
 	long offset;
+
+	if((instr & (58 << 25)) == (26 << 25))
+		;
+	else if()
+
+
+
+	long offset;
 	
 	offset = instr & ((1<<24) - 1);
 	if(offset & (1<<23))
@@ -446,15 +454,13 @@ step(void)
 			);
 	}
 	P->PC += 4;
-	if(((instr >> 27) & 3) == 0)
-		invalid()
-	else if(instr & (0x354 << 22))
+	if((instr & 0xFFC00000) == 0xD5000000)
 		syscall();
-	else if(instr & (5 << 26))
+	else if((instr & 0x1C000000) == 0x14000000)
 		branch(instr);
-	else if(instr & (4 << 26))
+	else if((instr & 0x1C000000) == 0x10000000)
 		alui(instr);
-	else if(instr & (5 << 25))
+	else if((instr & 0x0E000000) == 0x0A000000)
 		alur(instr);
 	else
 		invalid(instr);
