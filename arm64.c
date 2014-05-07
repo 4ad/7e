@@ -270,56 +270,43 @@ cond(u32int instr)
 static void
 branch(u32int instr)
 {
-	u32int sf, op, imm19, Rt;
-	u32int b5, b40, imm14, bit;
-	u32int imm26;
-	u32int op2, op3, op4, Rn, opc;
+	u32int R, op;
+	u32int b5, b31, b40, bit;
+	u32int imm14, imm19, imm26;
 	vlong offset, val;
 
 	offset = 0;
+	b31 = instr >> 31;
 	op = instr << 7 >> 31;
 	imm19 = instr << 8 >> 17;
-	Rt = instr & 0x1F;
-	if((instr & 0x7E000000) == 0x34000000) {	// CBZ, CBNZ
-		sf = instr >> 31;
-		val = sf ? P->R[Rt] : (u32int)P->R[Rt];
+	R = instr & 0x1F;
+	val = b31 ? P->R[R] : (u32int)P->R[R];
 
-		if((val == 0) & ~op)
+	if((instr & 0x7E000000) == 0x34000000) {	// CBZ, CBNZ
+		if(val==0 && op==0 || val!=0 && op!=0)
 			offset = imm19 << 2;
 	} else if((instr & 0xFF000010) == 0x54000000) {	// B.cond
 		if(cond(instr))
 			offset = imm19 << 2;
-
 	} else if((instr & 0x7E000000) == 0x36000000) {	// TBZ, TBNZ
-		b5 = instr >> 31;
 		b40 = instr << 8 >> 27;
 		imm14 = instr << 13 >> 18;
-		bit = b5 << 5 + b40;
-		val = b5 ? P->R[Rt] : (u32int)P->R[Rt];
-
-		if(((val & (1 << bit)) == 0) & ~op)
+		bit = b31 << 5 + b40;
+		if((val & 1<<bit) == 0 && op==0 || (val & 1<<bit) != 0 && op!=0)
 			offset = imm14;
 	} else if((instr & 0x7C000000) == 0x14000000) {	// B, BL
-		op = instr >> 31;
 		imm26 = instr << 6 >> 6;
-
-		if(op)
+		if(b31)
 			P->R[31] = P->PC;
 		offset = imm26 << 2;
-	}
-	else if((instr & 0xFE000000) == 0xD6000000) {	// BL, BLR, RET
-		opc = instr << 7 >> 28;
-		op2 = instr << 11 >> 27;
-		op3 = instr << 16 >> 26;
-		Rn = instr << 22 >> 27;
-		op4 = instr & 0x1F;
-		if(op2 != 0x1F || op3 != 0 || op4 != 0)
-			invalid(instr);
-
+	} else if((instr & 0xFE000000) == 0xD6000000) {	// BL, BLR, RET
+		R = instr << 22 >> 27;
 		op = instr << 9 >> 30;
 		if(op == 0x1)
 			P->R[31] = P->PC;
-		P->PC = P->R[Rn];
+		P->PC = P->R[R];
+	} else {
+		invalid(instr);
 	}
 	if(offset)
 		P->PC += offset - 4;
