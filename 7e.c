@@ -12,7 +12,7 @@ dump(void)
 {
 	int i;
 	
-	for(i = 0; i < 31; i++) {
+	for(i = 0; i < 32; i++) {
 		print("R%2d %.16lux", i, P->R[i]);
 		if((i % 2) == 1) print("\n");
 		else print("\t");
