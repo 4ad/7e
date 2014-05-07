@@ -291,7 +291,7 @@ branch(u32int instr)
 	} else if((instr & 0x7E000000) == 0x36000000) {	// TBZ, TBNZ
 		b40 = instr << 8 >> 27;
 		imm14 = instr << 13 >> 18;
-		bit = b31 << 5 + b40;
+		bit = (b31 << 5) + b40;
 		if((val & 1<<bit) == 0 && op==0 || (val & 1<<bit) != 0 && op!=0)
 			offset = imm14;
 	} else if((instr & 0x7C000000) == 0x14000000) {	// B, BL
