@@ -379,21 +379,16 @@ branch(u32int instr)
 }
 
 static void
-flags(vlong v)
+rstflags()
 {
-	P->N = P->Z = P->C = P->V;
-	if(v == 0)
-		P->Z = 1;
-	if(v < 0)
-		P->N = 1;
-	if(v >0)
+	P->N = P->Z = P->C = P->V = 0;
 }
 
 static void
 alui(u32int instr)
 {
 	u32int sf, op, shift, S, Rm, Rn, Rd;
-	u32int imm12, val;
+	u32int imm12, val, imm, carry;
 
 	sf = instr >> 31;
 	op = instr << 1 >> 31;
@@ -405,9 +400,17 @@ alui(u32int instr)
 
 	if((addr & 0x1F000000) == 0x11000000) {	// ADD, ADDS, SUB, SUBS
 		val = sf ? R->R[Rn] : u32int(R->R[Rn]);
-		P->R[Rd] = val + (op ? (imm12 << 12*shift) : -(imm12 << 12*shift));
-		if(S)
-			flags(P->R[Rd]);
+		imm = imm12 << 12*shift
+		if(sf)
+			R->R[Rn] = uadd64(R->R[Rn], imm, op, &carry);
+		else 
+			R->R[Rn] = (u64int)uadd32((u32int)R->R[Rn], imm, op, &carry);
+		if(S) {
+			rstflags();
+			if(R->R[Rn] == 0)
+				P->Z = 0;
+			P->C = carry;
+		}
 	} else if {
 		
 	} else {
