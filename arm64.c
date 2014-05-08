@@ -149,26 +149,92 @@ swap(u32int instr)
 	segunlock(seg);
 }
 
-static u32int
-add(u32int a, u32int b, u8int type, u8int *carry, u8int *overflow)
+static u64int
+uadd64(u64int a, u64int b, u32int type, u32int *carry)
 {
-	u32int res1;
-	u64int res2;
+	uint64 r;
 
-	if(type) {
-		res2 = (u64int)a - b + *carry - 1;
-		res1 = res2;
-		if(((a ^ b) & (1<<31)) && !((b ^ res1) & (1<<31))) *overflow = 1;
-		if(res2 & 0x100000000LL) *carry = 0;
-		else *carry = 1;	
-	} else {
-		res2 = (u64int)a + b + *carry;
-		res1 = res2;
-		if(!((a ^ b) & (1<<31)) && ((b ^ res1) & (1<<31))) *overflow = 1;
-		if(res2 & 0x100000000LL) *carry = 1;
-		else *carry = 0;
+	if(type) {	// SUB
+		r = a - b;
+		if (r > a)
+			*carry = 1;
+		else
+			*carry = 0;
+	} else {	// ADD
+		r = a + b;
+		if(r < a || r < b)
+			*carry = 1;
+		else
+			*carry = 0;
 	}
-	return res1;
+	return r;
+}
+
+static vlong
+add64(vlong a, vlong b, vlong type, vlong *overflow)
+{
+	vlong r;
+
+	if(type) {	// SUB
+		r = a - b;
+		if((a & (1 << 63)) != (b & (1 << 63)) &&
+		   (r & (1 << 63)) != (a & (1 << 63)))
+			*overflow = 1;
+		else
+			*overflow = 0;
+	} else {	// ADD
+		r = a + b;
+		if((a & (1 << 63)) == (b & (1 << 63)) &&
+		   (r & (1 << 63)) != (a & (1 << 63)))
+			*overflow = 1;
+		else
+			*overflow = 0;
+	}
+	return r;
+}
+
+static u32int
+uadd32(u32int a, u32int b, u32int type, u32int *carry)
+{
+	uint64 r;
+
+	if(type) {	// SUB
+		r = a - b;
+		if (r > a)
+			*carry = 1;
+		else
+			*carry = 0;
+	} else {	// ADD
+		r = a + b;
+		if(r < a || r < b)
+			*carry = 1;
+		else
+			*carry = 0;
+	}
+	return r;
+}
+
+static long
+add32(long a, long b, u32int type, u32int *overflow)
+{
+	long r;
+
+	if(type) {	// SUB
+		r = a - b;
+		if((a & (1 << 31)) != (b & (1 << 31)) &&
+		   (r & (1 << 31)) != (a & (1 << 31)))
+			*overflow = 1;
+		else
+			*overflow = 0;
+	} else {	// ADD
+		r = a + b;
+		if((a & (1 << 31)) == (b & (1 << 31)) &&
+		   (r & (1 << 31)) != (a & (1 << 31)))
+			*overflow = 1;
+		else
+			*overflow = 0;
+	}
+	return r;
 }
 
 static void
