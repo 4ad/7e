@@ -26,7 +26,7 @@ struct Process {
 
 	Segment *S[SEGNUM];	/* memory */
 	u64int PC;			/* program counter */
-	vlong R[32];		/* general purpose registers, R31 is stack/zero */
+	u64int R[32];		/* general purpose registers, R31 is stack/zero */
 	u64int N, Z, C, V;	/* flags */
 	
 	u32int FPSR;
