@@ -313,6 +313,43 @@ branch(u32int instr)
 }
 
 static void
+flags(vlong v)
+{
+	P->N = P->Z = P->C = P->V;
+	if(v == 0)
+		P->Z = 1;
+	if(v < 0)
+		P->N = 1;
+	if(v >0)
+}
+
+static void
+alui(u32int instr)
+{
+	u32int sf, op, shift, S, Rm, Rn, Rd;
+	u32int imm12, val;
+
+	sf = instr >> 31;
+	op = instr << 1 >> 31;
+	S = instr << 2 >> 31;
+	shift = instr << 8 >> 30;
+	Rn = (instr & 0x3E0) >> 5;
+	Rd = instr & 0x1F;
+	imm12 = instr << 10 >> 20;
+
+	if((addr & 0x1F000000) == 0x11000000) {	// ADD, ADDS, SUB, SUBS
+		val = sf ? R->R[Rn] : u32int(R->R[Rn]);
+		P->R[Rd] = val + (op ? (imm12 << 12*shift) : -(imm12 << 12*shift));
+		if(S)
+			flags(P->R[Rd]);
+	} else if {
+		
+	} else {
+		invalid(instr);
+	}
+}
+
+static void
 halfword(u32int instr)
 {
 	u32int offset, target, *Rn, *Rd;
